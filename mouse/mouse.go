@@ -120,3 +120,19 @@ func MouseClickXY(x, y float64, opts ...chromedp.MouseOption) chromedp.MouseActi
 		return p.Do(ctx)
 	})
 }
+
+func Select(sel string, v string, opts ...func(*chromedp.Selector)) chromedp.Action {
+	return chromedp.Tasks{
+		Click(sel, opts...),
+		chromedp.Sleep(random(500, 1500)),
+		chromedp.SendKeys(sel, v, opts...),
+	}
+}
+
+func SelectValue(sel string, v string, opts ...func(*chromedp.Selector)) chromedp.Action {
+	return chromedp.Tasks{
+		Click(sel, opts...),
+		chromedp.Sleep(random(500, 1500)),
+		chromedp.SetValue(sel, v, opts...),
+	}
+}
