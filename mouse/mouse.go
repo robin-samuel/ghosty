@@ -75,7 +75,7 @@ func Click(sel string, opts ...func(*chromedp.Selector)) chromedp.QueryAction {
 				{X: x0, Y: y0},
 				{X: xf, Y: yf},
 			},
-			Duration:  time.Duration(delta*1.5) * time.Millisecond,
+			Duration:  time.Duration(delta*2) * time.Millisecond,
 			Noise:     0.2,
 			Frequency: 60,
 		})
