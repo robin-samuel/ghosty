@@ -18,8 +18,8 @@ const (
 	minDelay       = 60   // Min delay in milliseconds between key presses
 	maxDelay       = 120  // Max delay in milliseconds between key presses
 	backspaceDelay = 300  // Time taken to realize a mistake and press backspace
-	beginDelayMin  = 500  // Min delay in milliseconds before starting to type
-	beginDelayMax  = 800  // Max delay in milliseconds before starting to type
+	beginDelayMin  = 1000 // Min delay in milliseconds before starting to type
+	beginDelayMax  = 1500 // Max delay in milliseconds before starting to type
 )
 
 func Type(sel interface{}, v string, opts ...chromedp.QueryOption) chromedp.QueryAction {
