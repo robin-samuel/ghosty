@@ -86,6 +86,7 @@ func Click(sel string, opts ...func(*chromedp.Selector)) chromedp.QueryAction {
 		}
 
 		tasks = append(tasks, MouseClickXY(xf, yf))
+		pos.X, pos.Y = xf, yf
 
 		return tasks.Do(ctx)
 	}, append(opts, chromedp.NodeVisible)...)
