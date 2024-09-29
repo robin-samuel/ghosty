@@ -17,7 +17,7 @@ import (
 
 // Click is an element query action that moves the cursor and sends a mouse
 // click event to the first element node matching the selector.
-func Click(sel string, opts ...func(*chromedp.Selector)) chromedp.QueryAction {
+func Click(sel any, opts ...func(*chromedp.Selector)) chromedp.QueryAction {
 	return chromedp.QueryAfter(sel, func(ctx context.Context, execCtx runtime.ExecutionContextID, nodes ...*cdp.Node) error {
 		if len(nodes) < 1 {
 			return fmt.Errorf("selector %q did not return any nodes", sel)
@@ -122,7 +122,7 @@ func MouseClickXY(x, y float64, opts ...chromedp.MouseOption) chromedp.MouseActi
 	})
 }
 
-func Select(sel string, v string, opts ...func(*chromedp.Selector)) chromedp.Action {
+func Select(sel any, v string, opts ...func(*chromedp.Selector)) chromedp.Action {
 	return chromedp.Tasks{
 		Click(sel, opts...),
 		chromedp.Sleep(random(500, 1500)),
@@ -130,7 +130,7 @@ func Select(sel string, v string, opts ...func(*chromedp.Selector)) chromedp.Act
 	}
 }
 
-func SelectValue(sel string, v string, opts ...func(*chromedp.Selector)) chromedp.Action {
+func SelectValue(sel any, v string, opts ...func(*chromedp.Selector)) chromedp.Action {
 	return chromedp.Tasks{
 		Click(sel, opts...),
 		chromedp.Sleep(random(500, 1500)),
