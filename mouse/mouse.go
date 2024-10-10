@@ -78,6 +78,7 @@ func Click(sel any, opts ...func(*chromedp.Selector)) chromedp.QueryAction {
 			Duration:  time.Duration(delta*3) * time.Millisecond,
 			Noise:     0.2,
 			Frequency: 60,
+			Viewport:  viewportFromContext(ctx),
 		})
 
 		var tasks chromedp.Tasks
@@ -85,16 +86,51 @@ func Click(sel any, opts ...func(*chromedp.Selector)) chromedp.QueryAction {
 			tasks = append(tasks, chromedp.MouseEvent(input.MouseMoved, point.X, point.Y))
 		}
 
-		tasks = append(tasks, MouseClickXY(xf, yf))
+		tasks = append(tasks, click(xf, yf))
 		pos.X, pos.Y = xf, yf
 
 		return tasks.Do(ctx)
 	}, append(opts, chromedp.NodeVisible)...)
 }
 
-// MouseClickXY is an action that sends a left mouse button click (i.e.,
+// click is an action that sends a left mouse button click (i.e.,
 // mousePressed and mouseReleased event) to the X, Y location.
-func MouseClickXY(x, y float64, opts ...chromedp.MouseOption) chromedp.MouseAction {
+func ClickXY(x, y float64) chromedp.MouseAction {
+	return chromedp.ActionFunc(func(ctx context.Context) error {
+		xf := x
+		yf := y
+
+		pos := fromContext(ctx)
+		x0, y0 := pos.X, pos.Y
+
+		delta := math.Sqrt(math.Pow(xf-x0, 2) + math.Pow(yf-y0, 2))
+
+		path := mimic.Generate(mimic.Config{
+			Points: []mimic.Point{
+				{X: x0, Y: y0},
+				{X: xf, Y: yf},
+			},
+			Duration:  time.Duration(delta*3) * time.Millisecond,
+			Noise:     0.2,
+			Frequency: 60,
+			Viewport:  viewportFromContext(ctx),
+		})
+
+		var tasks chromedp.Tasks
+		for _, point := range path {
+			tasks = append(tasks, chromedp.MouseEvent(input.MouseMoved, point.X, point.Y))
+		}
+
+		tasks = append(tasks, click(xf, yf))
+		pos.X, pos.Y = xf, yf
+
+		return tasks.Do(ctx)
+	})
+}
+
+// click is an action that sends a left mouse button click (i.e.,
+// mousePressed and mouseReleased event) to the X, Y location.
+func click(x, y float64, opts ...chromedp.MouseOption) chromedp.MouseAction {
 	return chromedp.ActionFunc(func(ctx context.Context) error {
 		p := &input.DispatchMouseEventParams{
 			Type:       input.MousePressed,
