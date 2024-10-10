@@ -15,6 +15,17 @@ import (
 	"github.com/robin-samuel/mimic"
 )
 
+// Reset resets the mouse position to a random location within the viewport.
+func Reset() chromedp.Action {
+	return chromedp.ActionFunc(func(ctx context.Context) error {
+		pos := fromContext(ctx)
+		view := viewportFromContext(ctx)
+		pos.X = rand.Float64() * view.Width
+		pos.Y = rand.Float64() * view.Height
+		return nil
+	})
+}
+
 // Click is an element query action that moves the cursor and sends a mouse
 // click event to the first element node matching the selector.
 func Click(sel any, opts ...func(*chromedp.Selector)) chromedp.QueryAction {
